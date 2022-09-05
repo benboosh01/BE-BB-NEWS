@@ -4,6 +4,7 @@ const {
   selectArticle,
 } = require('../models/news.models');
 
+
 exports.getTopics = (req, res, next) => {
   selectTopics()
     .then((topics) => {
