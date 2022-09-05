@@ -1,17 +1,21 @@
 const express = require('express');
 const {
   getTopics,
+  getArticle,
 } = require('./controllers/news.controllers');
+const {
+  customError,
+  psqlErrors,
+  serverError,
+} = require('./error-handling');
 
 const app = express();
 
-app.use(express.json());
-
 app.get('/api/topics', getTopics);
+app.get('/api/articles/:article_id', getArticle);
 
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).send({ msg: 'Internal Server Error' });
-});
+app.use(customError);
+app.use(psqlErrors);
+app.use(serverError);
 
 module.exports = app;
