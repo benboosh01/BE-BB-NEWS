@@ -4,7 +4,6 @@ const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data/index');
 
-
 beforeEach(() => {
   return seed(testData);
 });
@@ -36,7 +35,10 @@ describe('GET /api/articles/:article_id', () => {
       .then(({ body }) => {
         expect(body.article).toHaveProperty('author');
         expect(body.article).toHaveProperty('title');
-        expect(body.article).toHaveProperty('article_id', 1);
+        expect(body.article).toHaveProperty(
+          'article_id',
+          1
+        );
         expect(body.article).toHaveProperty('body');
         expect(body.article).toHaveProperty('topic');
         expect(body.article).toHaveProperty('created_at');
@@ -60,3 +62,20 @@ describe('GET /api/articles/:article_id', () => {
       });
   });
 });
+
+describe('GET /api/users', () => {
+  test('status: 200: responds with array of objects containing the correct properties', () => {
+    return request(app)
+      .get('/api/users')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users.length).toBe(4);
+        body.users.forEach((user) => {
+          expect(user).toHaveProperty('username');
+          expect(user).toHaveProperty('name');
+          expect(user).toHaveProperty('avatar_url');
+        });
+      });
+  });
+});
+

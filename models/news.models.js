@@ -19,3 +19,9 @@ exports.selectArticle = (article_id) => {
     }
   });
 };
+
+exports.selectUsers = () => {
+  let queryStr = `SELECT * FROM users`;
+  return db.query(queryStr).then(({ rows }) => rows);
+};
+
