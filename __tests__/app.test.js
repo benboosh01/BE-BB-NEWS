@@ -2,7 +2,7 @@ const request = require('supertest');
 const app = require('../app');
 const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
-testData = require('../db/data/test-data/index');
+const testData = require('../db/data/test-data/index');
 
 beforeEach(() => {
   return seed(testData);
@@ -35,7 +35,7 @@ describe('GET /api/articles/:article_id', () => {
       .then(({ body }) => {
         expect(body.article).toHaveProperty('author');
         expect(body.article).toHaveProperty('title');
-        expect(body.article).toHaveProperty('article_id');
+        expect(body.article).toHaveProperty('article_id', 1);
         expect(body.article).toHaveProperty('body');
         expect(body.article).toHaveProperty('topic');
         expect(body.article).toHaveProperty('created_at');
