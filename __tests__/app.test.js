@@ -203,12 +203,22 @@ describe('GET /api/articles', () => {
         });
       });
   });
-  xtest('status 404: responds with an error when topic does not exist', () => {
+  test('status 404: responds with an error when topic does not exist', () => {
     return request(app)
       .get('/api/articles?topic=aliens')
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe('topic aliens not found');
+      });
+  });
+  test('status 404: responds with an error when topic does not exist', () => {
+    return request(app)
+      .get('/api/articles?topic=paper')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          'no articles for the topic of paper available'
+        );
       });
   });
 });

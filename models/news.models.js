@@ -95,7 +95,7 @@ exports.selectAllArticles = (topic) => {
 
   return db.query(queryStr, queryVals).then(({ rows }) => {
     if (rows.length === 0) {
-      checkExists('articles', 'topic', topic);
+      return checkExists('topics', 'slug', topic);
     } else {
       return rows;
     }

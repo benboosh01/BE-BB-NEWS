@@ -1,5 +1,6 @@
 const format = require('pg-format');
 const db = require('../connection');
+const { request } = require('../../app');
 
 exports.convertTimestampToDate = ({
   created_at,
@@ -48,7 +49,7 @@ exports.checkExists = (table, column, value) => {
     } else {
       return Promise.reject({
         status: 404,
-        msg: `no articles for ${column} ${value} available`,
+        msg: `no articles for the topic of ${value} available`,
       });
     }
   });
