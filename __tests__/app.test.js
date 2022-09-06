@@ -3,6 +3,7 @@ const app = require('../app');
 const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data/index');
+const sorted = require('jest-sorted');
 
 beforeEach(() => {
   return seed(testData);
@@ -163,6 +164,51 @@ describe('GET /api/articles/:article_id (comment count)', () => {
           'comment_count',
           '0'
         );
+      });
+  });
+});
+
+describe('GET /api/articles', () => {
+  test('status 200: returns an array of articles with specified keys in descending order by date created', () => {
+    return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toBe(12);
+        body.articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(String),
+            })
+          );
+        });
+        expect(body.articles).toBeSorted('created_at', {
+          descending: true,
+        });
+      });
+  });
+  test('status 200: accepts a query which filters articles by provided topic', () => {
+    return request(app)
+      .get('/api/articles?topic=mitch')
+      .expect(200)
+      .then(({ body }) => {
+        body.articles.forEach((article) => {
+          expect(article).toHaveProperty('topic', 'mitch');
+        });
+      });
+  });
+  xtest('status 404: responds with an error when topic does not exist', () => {
+    return request(app)
+      .get('/api/articles?topic=aliens')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('topic aliens not found');
       });
   });
 });
