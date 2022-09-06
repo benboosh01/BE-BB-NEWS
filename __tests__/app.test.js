@@ -3,7 +3,6 @@ const app = require('../app');
 const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data/index');
-const { string } = require('pg-format');
 
 beforeEach(() => {
   return seed(testData);
@@ -139,6 +138,31 @@ describe('PATCH /api/articles/:article_id', () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toEqual('invalid input');
+      });
+  });
+});
+
+describe('GET /api/articles/:article_id (comment count)', () => {
+  test('returns article from specified article_id with correct comment count', () => {
+    return request(app)
+      .get('/api/articles/1')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toHaveProperty(
+          'comment_count',
+          '11'
+        );
+      });
+  });
+  test('handles articles with no comments appropriately by including the column and the value 0', () => {
+    return request(app)
+      .get('/api/articles/10')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toHaveProperty(
+          'comment_count',
+          '0'
+        );
       });
   });
 });
