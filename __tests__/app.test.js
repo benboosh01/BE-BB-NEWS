@@ -3,6 +3,7 @@ const app = require('../app');
 const db = require('../db/connection');
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data/index');
+const { string } = require('pg-format');
 
 beforeEach(() => {
   return seed(testData);
@@ -79,3 +80,65 @@ describe('GET /api/users', () => {
   });
 });
 
+describe('PATCH /api/articles/:article_id', () => {
+  test('status 200: responds with article updated with newVote quantity', () => {
+    const patch = { inc_votes: 10 };
+    return request(app)
+      .patch('/api/articles/1')
+      .send(patch)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toEqual(
+          expect.objectContaining({
+            article_id: 1,
+            title: expect.any(String),
+            topic: 'mitch',
+            author: 'butter_bridge',
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: 110,
+          })
+        );
+      });
+  });
+  test('status 404: responds with an error when article_id does not exist', () => {
+    const patch = { inc_votes: 10 };
+    return request(app)
+      .patch('/api/articles/99')
+      .send(patch)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('article id not found');
+      });
+  });
+  test('status 400: responds with an error when passed an invalid article_id type', () => {
+    const patch = { inc_votes: 10 };
+    return request(app)
+      .patch('/api/articles/notANumber')
+      .send(patch)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toEqual('invalid input');
+      });
+  });
+  test('status 400: responds with an error when inc_votes as an invalid data type', () => {
+    const patch = { inc_votes: 'ten' };
+    return request(app)
+      .patch('/api/articles/1')
+      .send(patch)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toEqual('invalid input');
+      });
+  });
+  test('status 400: responds with an error if inc_votes not present in request', () => {
+    const patch = {};
+    return request(app)
+      .patch('/api/articles/1')
+      .send(patch)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toEqual('invalid input');
+      });
+  });
+});

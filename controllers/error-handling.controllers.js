@@ -9,7 +9,9 @@ exports.customError = (err, req, res, next) => {
 exports.psqlErrors = (err, req, res, next) => {
   if (err.code === '22P02') {
     res.status(400).send({ msg: 'invalid input' });
-  } else next(err);
+  } else {
+    next(err);
+  }
 };
 
 exports.serverError = (err, req, res, next) => {
