@@ -116,6 +116,8 @@ exports.insertComment = (article_id, comment) => {
   const queryVals = [article_id, username, body];
   return db.query(queryStr, queryVals).then(({ rows }) => {
     return rows[0];
+  });
+};
 
 exports.selectComments = (article_id) => {
   let queryStr = `
