@@ -222,3 +222,27 @@ describe('GET /api/articles', () => {
       });
   });
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+  test('status 201: succesfully completes request and responds with the posted comment', () => {
+    const postComment = {
+      username: 'lurker',
+      body: 'I am a comment',
+    };
+    const response = {
+      article_id: 1,
+      author: 'lurker',
+      body: 'I am a comment',
+      comment_id: 19,
+      created_at: expect.any(String),
+      votes: 0,
+    };
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send(postComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual(response);
+      });
+  });
+});

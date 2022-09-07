@@ -101,3 +101,20 @@ exports.selectAllArticles = (topic) => {
     }
   });
 };
+
+exports.insertComment = (article_id, comment) => {
+  const { username, body } = comment;
+  let queryStr = `
+        INSERT INTO comments (
+            article_id,
+            author,
+            body
+        )
+        VALUES ($1, $2, $3)
+        RETURNING *;
+    `;
+  const queryVals = [article_id, username, body];
+  return db.query(queryStr, queryVals).then(({ rows }) => {
+    return rows[0];
+  });
+};
