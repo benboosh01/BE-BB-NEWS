@@ -222,3 +222,49 @@ describe('GET /api/articles', () => {
       });
   });
 });
+
+describe('GET /api/articles/:article_id/comments', () => {
+  test('status 200: returns an array of comments for specified article_id', () => {
+    return request(app)
+      .get('/api/articles/1/comments')
+      .expect(200)
+      .then(({ body }) => {
+        body.comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+            })
+          );
+        });
+        expect(body.comments[0]).toEqual(
+          expect.objectContaining({
+            comment_id: 2,
+            votes: 14,
+            created_at: expect.any(String),
+            author: 'butter_bridge',
+            body: 'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
+          })
+        );
+      });
+  });
+  test('status 404: responds with error when article_id does not exist', () => {
+    return request(app)
+      .get('/api/articles/99/comments')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('article id not found');
+      });
+  });
+  test('status 400: responds with an error when article_id is an invalid data type', () => {
+    return request(app)
+      .get('/api/articles/ten/comments')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('invalid input');
+      });
+  });
+});

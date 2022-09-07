@@ -9,18 +9,18 @@ exports.selectTopics = () => {
 exports.selectArticle = (article_id) => {
   let queryStr = `
   SELECT 
-  a.author, 
-  a.title,
-  a.article_id,
-  a.topic,
-  a.created_at,
-  a.votes,
-  COUNT(c.article_id) AS comment_count,
-  a.body
-  FROM articles a 
-  LEFT JOIN comments c ON a.article_id = c.article_id
-  WHERE a.article_id = $1
-  GROUP BY a.article_id;
+  articles.author, 
+  articles.title,
+  articles.article_id,
+  articles.topic,
+  articles.created_at,
+  articles.votes,
+  COUNT(comments.article_id) AS comment_count,
+  articles.body
+  FROM articles
+  LEFT JOIN comments ON articles.article_id = comments.article_id
+  WHERE articles.article_id = $1
+  GROUP BY articles.article_id;
   `;
 
   const queryVals = [article_id];
@@ -71,31 +71,57 @@ exports.updateArticle = (article_id, votes) => {
 exports.selectAllArticles = (topic) => {
   let queryStr = `
     SELECT 
-    a.author, 
-    a.title,
-    a.article_id,
-    a.topic,
-    a.created_at,
-    a.votes,
-    COUNT(c.article_id) AS comment_count 
-    FROM articles a 
-    LEFT JOIN comments c ON a.article_id = c.article_id
+    articles.author, 
+    articles.title,
+    articles.article_id,
+    articles.topic,
+    articles.created_at,
+    articles.votes,
+    COUNT(comments.article_id) AS comment_count 
+    FROM articles
+    LEFT JOIN comments ON articles.article_id = comments.article_id
     `;
 
   const queryVals = [];
 
   if (topic) {
     queryVals.push(topic);
-    queryStr += `WHERE a.topic = $1`;
+    queryStr += `WHERE articles.topic = $1`;
   }
 
   queryStr += `
-      GROUP BY a.article_id
-      ORDER BY a.created_at DESC;`;
+      GROUP BY articles.article_id
+      ORDER BY articles.created_at DESC;`;
 
   return db.query(queryStr, queryVals).then(({ rows }) => {
     if (rows.length === 0) {
       return checkExists('topics', 'slug', topic);
+    } else {
+      return rows;
+    }
+  });
+};
+
+exports.selectComments = (article_id) => {
+  let queryStr = `
+      SELECT  
+      comment_id,
+      votes,
+      created_at,
+      author,
+      body
+      FROM comments 
+      WHERE article_id = $1;
+    `;
+
+  const queryVals = [article_id];
+
+  return db.query(queryStr, queryVals).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({
+        status: 404,
+        msg: 'article id not found',
+      });
     } else {
       return rows;
     }
