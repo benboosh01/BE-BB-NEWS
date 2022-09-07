@@ -211,7 +211,7 @@ describe('GET /api/articles', () => {
         expect(body.msg).toBe('topic aliens not found');
       });
   });
-  test('status 404: responds with an error when topic does not exist', () => {
+  test('status 404: responds with an error when no articles for topic however topic does exist', () => {
     return request(app)
       .get('/api/articles?topic=paper')
       .expect(404)
