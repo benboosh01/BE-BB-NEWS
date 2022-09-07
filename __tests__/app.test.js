@@ -208,17 +208,15 @@ describe('GET /api/articles', () => {
       .get('/api/articles?topic=aliens')
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe('topic aliens not found');
+        expect(body.msg).toBe('aliens not found');
       });
   });
-  test('status 404: responds with an error when no articles for topic however topic does exist', () => {
+  test('status 404: responds with an empty arrary when no articles for topic however topic does exist', () => {
     return request(app)
       .get('/api/articles?topic=paper')
-      .expect(404)
+      .expect(200)
       .then(({ body }) => {
-        expect(body.msg).toBe(
-          'no articles for the topic of paper available'
-        );
+        expect(body.articles).toEqual([]);
       });
   });
 });
@@ -229,9 +227,11 @@ describe('GET /api/articles/:article_id/comments', () => {
       .get('/api/articles/1/comments')
       .expect(200)
       .then(({ body }) => {
+        expect(body.comments.length).toBe(11);
         body.comments.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({
+              article_id: 1,
               comment_id: expect.any(Number),
               votes: expect.any(Number),
               created_at: expect.any(String),
@@ -242,6 +242,7 @@ describe('GET /api/articles/:article_id/comments', () => {
         });
         expect(body.comments[0]).toEqual(
           expect.objectContaining({
+            article_id: 1,
             comment_id: 2,
             votes: 14,
             created_at: expect.any(String),
@@ -256,7 +257,7 @@ describe('GET /api/articles/:article_id/comments', () => {
       .get('/api/articles/99/comments')
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe('article id not found');
+        expect(body.msg).toBe('99 not found');
       });
   });
   test('status 400: responds with an error when article_id is an invalid data type', () => {
@@ -265,6 +266,14 @@ describe('GET /api/articles/:article_id/comments', () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe('invalid input');
+      });
+  });
+  test('status 200: article exists with no comments', () => {
+    return request(app)
+      .get('/api/articles/10/comments')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
       });
   });
 });

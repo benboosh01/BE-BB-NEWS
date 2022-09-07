@@ -104,7 +104,8 @@ exports.selectAllArticles = (topic) => {
 
 exports.selectComments = (article_id) => {
   let queryStr = `
-      SELECT  
+      SELECT
+      article_id,  
       comment_id,
       votes,
       created_at,
@@ -118,10 +119,11 @@ exports.selectComments = (article_id) => {
 
   return db.query(queryStr, queryVals).then(({ rows }) => {
     if (rows.length === 0) {
-      return Promise.reject({
-        status: 404,
-        msg: 'article id not found',
-      });
+      return checkExists(
+        'articles',
+        'article_id',
+        article_id
+      );
     } else {
       return rows;
     }
