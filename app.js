@@ -26,6 +26,10 @@ app.get('/api/articles', getAllArticles);
 app.post('/api/articles/:article_id/comments', postComment);
 app.get('/api/articles/:article_id/comments', getComments);
 
+app.all('*', (req, res) => {
+  res.status(404).send({ msg: 'invalid URL' });
+});
+
 app.use(customError);
 app.use(psqlErrors);
 app.use(serverError);
