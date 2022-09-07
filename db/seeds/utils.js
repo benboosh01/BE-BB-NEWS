@@ -44,13 +44,10 @@ exports.checkExists = (table, column, value) => {
     if (rows.length === 0) {
       return Promise.reject({
         status: 404,
-        msg: `topic ${value} not found`,
+        msg: `${value} not found`,
       });
     } else {
-      return Promise.reject({
-        status: 404,
-        msg: `no articles for the topic of ${value} available`,
-      });
+      return [];
     }
   });
 };

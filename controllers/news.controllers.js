@@ -5,6 +5,7 @@ const {
   selectUsers,
   updateArticle,
   selectArticle,
+  selectComments,
 } = require('../models/news.models');
 
 exports.getTopics = (req, res, next) => {
@@ -47,6 +48,15 @@ exports.getAllArticles = (req, res, next) => {
   selectAllArticles(topic)
     .then((articles) => {
       res.status(200).send({ articles });
+    })
+    .catch(next);
+};
+
+exports.getComments = (req, res, next) => {
+  const { article_id } = req.params;
+  selectComments(article_id)
+    .then((comments) => {
+      res.status(200).send({ comments });
     })
     .catch(next);
 };
