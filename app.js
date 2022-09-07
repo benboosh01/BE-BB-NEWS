@@ -4,6 +4,7 @@ const {
   getArticle,
   getUsers,
   patchArticle,
+  getAllArticles,
 } = require('./controllers/news.controllers');
 const {
   customError,
@@ -19,6 +20,7 @@ app.get('/api/topics', getTopics);
 app.get('/api/articles/:article_id', getArticle);
 app.get('/api/users', getUsers);
 app.patch('/api/articles/:article_id', patchArticle);
+app.get('/api/articles', getAllArticles);
 
 app.use(customError);
 app.use(psqlErrors);

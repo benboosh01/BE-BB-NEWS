@@ -1,9 +1,10 @@
 const { request } = require('../app');
 const {
   selectTopics,
-  selectArticle,
+  selectAllArticles,
   selectUsers,
   updateArticle,
+  selectArticle,
 } = require('../models/news.models');
 
 exports.getTopics = (req, res, next) => {
@@ -37,6 +38,15 @@ exports.patchArticle = (req, res, next) => {
   updateArticle(article_id, inc_votes)
     .then((article) => {
       res.status(200).send({ article });
+    })
+    .catch(next);
+};
+
+exports.getAllArticles = (req, res, next) => {
+  const { topic } = req.query;
+  selectAllArticles(topic)
+    .then((articles) => {
+      res.status(200).send({ articles });
     })
     .catch(next);
 };

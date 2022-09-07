@@ -1,6 +1,16 @@
-exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
+const format = require('pg-format');
+const db = require('../connection');
+const { request } = require('../../app');
+
+exports.convertTimestampToDate = ({
+  created_at,
+  ...otherProperties
+}) => {
   if (!created_at) return { ...otherProperties };
-  return { created_at: new Date(created_at), ...otherProperties };
+  return {
+    created_at: new Date(created_at),
+    ...otherProperties,
+  };
 };
 
 exports.createRef = (arr, key, value) => {
@@ -11,12 +21,36 @@ exports.createRef = (arr, key, value) => {
 };
 
 exports.formatComments = (comments, idLookup) => {
-  return comments.map(({ created_by, belongs_to, ...restOfComment }) => {
-    const article_id = idLookup[belongs_to];
-    return {
-      article_id,
-      author: created_by,
-      ...this.convertTimestampToDate(restOfComment),
-    };
+  return comments.map(
+    ({ created_by, belongs_to, ...restOfComment }) => {
+      const article_id = idLookup[belongs_to];
+      return {
+        article_id,
+        author: created_by,
+        ...this.convertTimestampToDate(restOfComment),
+      };
+    }
+  );
+};
+
+exports.checkExists = (table, column, value) => {
+  const queryStr = format(
+    `SELECT * FROM %I WHERE %I = $1`,
+    table,
+    column
+  );
+  const queryVal = [value];
+  return db.query(queryStr, queryVal).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({
+        status: 404,
+        msg: `topic ${value} not found`,
+      });
+    } else {
+      return Promise.reject({
+        status: 404,
+        msg: `no articles for the topic of ${value} available`,
+      });
+    }
   });
 };
