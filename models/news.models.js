@@ -68,7 +68,11 @@ exports.updateArticle = (article_id, votes) => {
   });
 };
 
-exports.selectAllArticles = (topic) => {
+exports.selectAllArticles = (
+  topic,
+  sort_by = 'created_at',
+  order = 'DESC'
+) => {
   let queryStr = `
     SELECT 
     articles.author, 
@@ -90,8 +94,30 @@ exports.selectAllArticles = (topic) => {
   }
 
   queryStr += `
-      GROUP BY articles.article_id
-      ORDER BY articles.created_at DESC;`;
+  GROUP BY articles.article_id`;
+
+  const validOrder = ['ASC', 'DESC'];
+  const validColumns = [
+    'author',
+    'title',
+    'article_id',
+    'topic',
+    'created_at',
+    'votes',
+    'comment_count',
+  ];
+
+  if (
+    !validColumns.includes(sort_by) ||
+    !validOrder.includes(order.toUpperCase())
+  ) {
+    return Promise.reject({
+      status: 400,
+      msg: 'bad request',
+    });
+  }
+
+  queryStr += ` ORDER BY ${sort_by} ${order};`;
 
   return db.query(queryStr, queryVals).then(({ rows }) => {
     if (rows.length === 0) {
