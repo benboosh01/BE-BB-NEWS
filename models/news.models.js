@@ -7,7 +7,7 @@ exports.selectTopics = () => {
 };
 
 exports.selectArticle = (article_id) => {
-  let queryStr = `
+  const queryStr = `
   SELECT 
   articles.author, 
   articles.title,
@@ -49,7 +49,7 @@ exports.updateArticle = (article_id, votes) => {
       msg: 'invalid input',
     });
   }
-  let queryStr = `
+  const queryStr = `
     UPDATE articles
     SET votes = votes + $1
     WHERE article_id = $2
@@ -103,7 +103,7 @@ exports.selectAllArticles = (topic) => {
 };
 
 exports.selectComments = (article_id) => {
-  let queryStr = `
+  const queryStr = `
       SELECT
       article_id,  
       comment_id,
@@ -143,7 +143,7 @@ exports.insertComment = (article_id, comment) => {
       msg: 'missing comments from request',
     });
   }
-  let queryStr = `
+  const queryStr = `
         INSERT INTO comments (
             article_id,
             author,

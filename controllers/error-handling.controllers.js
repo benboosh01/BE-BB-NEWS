@@ -10,7 +10,6 @@ exports.psqlErrors = (err, req, res, next) => {
   if (err.code === '22P02') {
     res.status(400).send({ msg: 'invalid input' });
   } else if (err.code === '23503') {
-    console.log(err.detail);
     if (
       err.detail.includes('author') &&
       err.detail.includes('not present in table "users"')
