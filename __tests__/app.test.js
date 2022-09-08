@@ -369,7 +369,7 @@ describe('POST /api/articles/:article_id/comments', () => {
   });
 });
 
-describe.only('/api/articles (queries)', () => {
+describe('/api/articles (queries)', () => {
   test('status 200: articles are sorted by specified column', () => {
     return request(app)
       .get('/api/articles?sort_by=author')
