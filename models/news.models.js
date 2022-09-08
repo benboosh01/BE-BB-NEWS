@@ -129,3 +129,31 @@ exports.selectComments = (article_id) => {
     }
   });
 };
+
+exports.insertComment = (article_id, comment) => {
+  const { username, body } = comment;
+  if (!username) {
+    return Promise.reject({
+      status: 400,
+      msg: 'missing username from request',
+    });
+  } else if (!body) {
+    return Promise.reject({
+      status: 400,
+      msg: 'missing comments from request',
+    });
+  }
+  let queryStr = `
+        INSERT INTO comments (
+            article_id,
+            author,
+            body
+        )
+        VALUES ($1, $2, $3)
+        RETURNING *;
+    `;
+  const queryVals = [article_id, username, body];
+  return db.query(queryStr, queryVals).then(({ rows }) => {
+    return rows[0];
+  });
+};

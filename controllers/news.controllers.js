@@ -5,6 +5,7 @@ const {
   selectUsers,
   updateArticle,
   selectArticle,
+  insertComment,
   selectComments,
 } = require('../models/news.models');
 
@@ -57,6 +58,16 @@ exports.getComments = (req, res, next) => {
   selectComments(article_id)
     .then((comments) => {
       res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
+exports.postComment = (req, res, next) => {
+  const { article_id } = req.params;
+  const comment = req.body;
+  insertComment(article_id, comment)
+    .then((comment) => {
+      res.status(201).send({ comment });
     })
     .catch(next);
 };

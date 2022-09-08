@@ -277,3 +277,94 @@ describe('GET /api/articles/:article_id/comments', () => {
       });
   });
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+  test('status 201: succesfully completes request and responds with the posted comment', () => {
+    const postComment = {
+      username: 'lurker',
+      body: 'I am a comment',
+    };
+    const response = {
+      article_id: 1,
+      author: 'lurker',
+      body: 'I am a comment',
+      comment_id: 19,
+      created_at: expect.any(String),
+      votes: 0,
+    };
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send(postComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual(response);
+      });
+  });
+  test('status 404: article_id does not exist', () => {
+    const postComment = {
+      username: 'lurker',
+      body: 'I am a comment',
+    };
+    return request(app)
+      .post('/api/articles/99/comments')
+      .send(postComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('article id not found');
+      });
+  });
+  test('status 404: username does not exist on the database', () => {
+    const postComment = {
+      username: 'Imposter',
+      body: 'I am a comment',
+    };
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send(postComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('username not found');
+      });
+  });
+  test('status 400: invalid data type entered for article_id', () => {
+    const postComment = {
+      username: 'Imposter',
+      body: 'I am a comment',
+    };
+    return request(app)
+      .post('/api/articles/ten/comments')
+      .send(postComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('invalid input');
+      });
+  });
+  test('status 400: missing comments from request body', () => {
+    const postComment = {
+      username: 'Imposter',
+    };
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send(postComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          'missing comments from request'
+        );
+      });
+  });
+  test('status 400: missing username from request body', () => {
+    const postComment = {
+      body: 'I am a comment',
+    };
+    return request(app)
+      .post('/api/articles/1/comments')
+      .send(postComment)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          'missing username from request'
+        );
+      });
+  });
+});
