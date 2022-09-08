@@ -188,7 +188,7 @@ describe('GET /api/articles', () => {
             })
           );
         });
-        expect(body.articles).toBeSorted('created_at', {
+        expect(body.articles).toBeSortedBy('created_at', {
           descending: true,
         });
       });
@@ -365,6 +365,45 @@ describe('POST /api/articles/:article_id/comments', () => {
         expect(body.msg).toBe(
           'missing username from request'
         );
+      });
+  });
+});
+
+describe('/api/articles (queries)', () => {
+  test('status 200: articles are sorted by specified column', () => {
+    return request(app)
+      .get('/api/articles?sort_by=author')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy('author', {
+          descending: true,
+        });
+      });
+  });
+  test('status 200: articles are sorted by specified column and by specified order', () => {
+    return request(app)
+      .get('/api/articles?sort_by=author&order=asc')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy('author', {
+          descending: false,
+        });
+      });
+  });
+  test('status 400: responds with an error if column name not valid', () => {
+    return request(app)
+      .get('/api/articles?sort_by=notAColumn')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('bad request');
+      });
+  });
+  test('', () => {
+    return request(app)
+      .get('/api/articles?order=random')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('bad request');
       });
   });
 });
