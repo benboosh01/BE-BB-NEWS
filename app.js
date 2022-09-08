@@ -7,6 +7,7 @@ const {
   getAllArticles,
   postComment,
   getComments,
+  deleteComment,
 } = require('./controllers/news.controllers');
 const {
   customError,
@@ -25,6 +26,7 @@ app.patch('/api/articles/:article_id', patchArticle);
 app.get('/api/articles', getAllArticles);
 app.post('/api/articles/:article_id/comments', postComment);
 app.get('/api/articles/:article_id/comments', getComments);
+app.delete('/api/comments/:comment_id', deleteComment);
 
 app.all('*', (req, res) => {
   res.status(404).send({ msg: 'invalid URL' });

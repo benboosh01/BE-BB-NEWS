@@ -407,3 +407,44 @@ describe('/api/articles (queries)', () => {
       });
   });
 });
+
+describe('DELETE /api/comments/:comment_id', () => {
+  test('status 204: responds with no content', () => {
+    return request(app)
+      .delete('/api/comments/1')
+      .expect(204)
+      .then(({ body }) => {
+        expect(body).toEqual({});
+      });
+  });
+  test('status 204: comment no longer exists in database', () => {
+    return request(app)
+      .delete('/api/comments/1')
+      .expect(204)
+      .then(() => {
+        return db.query(`SELECT * FROM comments`);
+      })
+      .then(({ rows }) => {
+        rows.forEach((row) => {
+          expect(row.comment_id).not.toBe(1);
+        });
+        expect(rows.length).toBe(17);
+      });
+  });
+  test('status 404: responds with error if comment_id does not exist', () => {
+    return request(app)
+      .delete('/api/comments/99')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('comment id not found');
+      });
+  });
+  test('status 400: responds with error if invalid comment_id data type', () => {
+    return request(app)
+      .delete('/api/comments/ten')
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('invalid input');
+      });
+  });
+});
