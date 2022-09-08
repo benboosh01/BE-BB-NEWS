@@ -1,6 +1,5 @@
 const format = require('pg-format');
 const db = require('../connection');
-const { request } = require('../../app');
 
 exports.convertTimestampToDate = ({
   created_at,
