@@ -222,7 +222,7 @@ describe('GET /api/articles', () => {
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
-  test.only('status 200: returns an array of comments for specified article_id', () => {
+  test('status 200: returns an array of comments for specified article_id', () => {
     return request(app)
       .get('/api/articles/1/comments')
       .expect(200)
