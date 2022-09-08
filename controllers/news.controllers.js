@@ -53,21 +53,21 @@ exports.getAllArticles = (req, res, next) => {
     .catch(next);
 };
 
+exports.getComments = (req, res, next) => {
+  const { article_id } = req.params;
+  selectComments(article_id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
 exports.postComment = (req, res, next) => {
   const { article_id } = req.params;
   const comment = req.body;
   insertComment(article_id, comment)
     .then((comment) => {
       res.status(201).send({ comment });
-    })
-    .catch(next);
-};
-
-exports.getComments = (req, res, next) => {
-  const { article_id } = req.params;
-  selectComments(article_id)
-    .then((comments) => {
-      res.status(200).send({ comments });
     })
     .catch(next);
 };
