@@ -408,15 +408,7 @@ describe('/api/articles (queries)', () => {
   });
 });
 
-describe('DELETE /api/comments/:comment_id', () => {
-  test('status 204: responds with no content', () => {
-    return request(app)
-      .delete('/api/comments/1')
-      .expect(204)
-      .then(({ body }) => {
-        expect(body).toEqual({});
-      });
-  });
+describe.only('DELETE /api/comments/:comment_id', () => {
   test('status 204: comment no longer exists in database', () => {
     return request(app)
       .delete('/api/comments/1')
@@ -429,6 +421,14 @@ describe('DELETE /api/comments/:comment_id', () => {
           expect(row.comment_id).not.toBe(1);
         });
         expect(rows.length).toBe(17);
+      })
+      .then(() => {
+        return db.query(
+          `SELECT * FROM comments WHERE comment_id = 1;`
+        );
+      })
+      .then(({ rows }) => {
+        expect(rows).toEqual([]);
       });
   });
   test('status 404: responds with error if comment_id does not exist', () => {

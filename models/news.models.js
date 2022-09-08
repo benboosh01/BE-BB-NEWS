@@ -193,8 +193,6 @@ exports.removeComment = (comment_id) => {
         status: 404,
         msg: 'comment id not found',
       });
-    } else {
-      return rows[0];
     }
   });
 };
