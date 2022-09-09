@@ -455,7 +455,7 @@ describe.only('GET /api', () => {
       .get('/')
       .expect(200)
       .then(({ body }) => {
-        // console.log(body);
+        console.log(body);
       });
   });
 });

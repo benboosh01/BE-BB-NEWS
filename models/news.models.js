@@ -201,11 +201,5 @@ exports.removeComment = (comment_id) => {
 };
 
 exports.returnEndpoints = () => {
-  return fs.promises
-    .readFile(endpoints)
-    .then((fileContents) => {
-      const jsonFile = JSON.parse(fileContents);
-      console.log(jsonFile);
-      return JSON.parse(fileContents);
-    });
+  return endpoints;
 };

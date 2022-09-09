@@ -84,9 +84,6 @@ exports.deleteComment = (req, res, next) => {
 };
 
 exports.getApi = (req, res, next) => {
-  returnEndpoints()
-    .then((endpoints) => {
-      res.status(200).send(endpoints);
-    })
-    .catch(next);
+  const endpoints = returnEndpoints();
+  res.status(200).send(endpoints);
 };
