@@ -2,7 +2,7 @@ const db = require('../db/connection');
 const { checkExists } = require('../db/seeds/utils');
 const fs = require('fs');
 const { Cipher } = require('crypto');
-const endpoints = `${__dirname}/../endpoints.json`;
+const endpoints = require('../endpoints.json');
 
 exports.selectTopics = () => {
   let queryStr = `SELECT * FROM topics;`;
