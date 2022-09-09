@@ -1,5 +1,7 @@
 const db = require('../db/connection');
 const { checkExists } = require('../db/seeds/utils');
+const fs = require('fs');
+const endpoints = `${__dirname}/../endpoints.json`;
 
 exports.selectTopics = () => {
   let queryStr = `SELECT * FROM topics;`;
@@ -195,4 +197,12 @@ exports.removeComment = (comment_id) => {
       });
     }
   });
+};
+
+exports.returnEndpoints = () => {
+  return fs.promises
+    .readFile(endpoints)
+    .then((fileContents) => {
+      return JSON.parse(fileContents);
+    });
 };

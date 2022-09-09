@@ -448,3 +448,14 @@ describe('DELETE /api/comments/:comment_id', () => {
       });
   });
 });
+
+describe('GET /api', () => {
+  test('status 200: returns the JSON file', () => {
+    return request(app)
+      .get('/api')
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+      });
+  });
+});
