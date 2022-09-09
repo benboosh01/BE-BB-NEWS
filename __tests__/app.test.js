@@ -408,7 +408,7 @@ describe('/api/articles (queries)', () => {
   });
 });
 
-describe.only('DELETE /api/comments/:comment_id', () => {
+describe('DELETE /api/comments/:comment_id', () => {
   test('status 204: comment no longer exists in database', () => {
     return request(app)
       .delete('/api/comments/1')
