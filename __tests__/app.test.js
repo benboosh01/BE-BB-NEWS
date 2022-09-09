@@ -452,10 +452,10 @@ describe('DELETE /api/comments/:comment_id', () => {
 describe.only('GET /api', () => {
   test('status 200: returns the JSON file', () => {
     return request(app)
-      .get('/')
+      .get('/api')
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
+        expect(typeof body).toEqual('object');
       });
   });
 });
