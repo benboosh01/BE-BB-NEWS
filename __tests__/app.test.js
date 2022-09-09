@@ -449,7 +449,7 @@ describe('DELETE /api/comments/:comment_id', () => {
   });
 });
 
-describe.only('GET /api', () => {
+describe('GET /api', () => {
   test('status 200: returns the JSON file', () => {
     return request(app)
       .get('/api')
