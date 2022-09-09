@@ -19,7 +19,7 @@ const {
 const app = express();
 
 app.use(express.json());
-app.use(express.static('./endpoints.json'));
+app.use(express.static('public'));
 
 app.get('/api', getApi);
 app.get('/api/topics', getTopics);
