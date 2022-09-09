@@ -13,7 +13,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
@@ -42,7 +42,7 @@
   "PATCH /api/articles/:article_id": {
     "description": "increments the amount of votes for an article with value passed in sent object",
     "queries": [],
-    "exampleObject": { "inc_votes": 10 },
+    "exampleRequest": { "inc_votes": 10 },
     "exampleResponse": [
       {
         "article": {
@@ -92,7 +92,7 @@
   "POST /api/articles/:article_id/comments": {
     "description": "inserts a new comment from sent object for passed article_id",
     "queries": [],
-    "exampleObject": {
+    "exampleRequest": {
       "username": "lurker",
       "body": "I am a comment"
     },

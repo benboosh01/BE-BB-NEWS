@@ -8,6 +8,7 @@ const {
   insertComment,
   selectComments,
   removeComment,
+  returnEndpoints,
 } = require('../models/news.models');
 
 exports.getTopics = (req, res, next) => {
@@ -78,6 +79,14 @@ exports.deleteComment = (req, res, next) => {
   removeComment(comment_id)
     .then(() => {
       res.sendStatus(204);
+    })
+    .catch(next);
+};
+
+exports.getApi = (req, res, next) => {
+  returnEndpoints()
+    .then((endpoints) => {
+      res.status(200).send(endpoints);
     })
     .catch(next);
 };
