@@ -1,6 +1,7 @@
 const db = require('../db/connection');
 const { checkExists } = require('../db/seeds/utils');
 const fs = require('fs');
+const { Cipher } = require('crypto');
 const endpoints = `${__dirname}/../endpoints.json`;
 
 exports.selectTopics = () => {
@@ -203,6 +204,8 @@ exports.returnEndpoints = () => {
   return fs.promises
     .readFile(endpoints)
     .then((fileContents) => {
+      const jsonFile = JSON.parse(fileContents);
+      console.log(jsonFile);
       return JSON.parse(fileContents);
     });
 };
