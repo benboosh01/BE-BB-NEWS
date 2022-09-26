@@ -15,9 +15,11 @@ const {
   psqlErrors,
   serverError,
 } = require('./controllers/error-handling.controllers');
+const cors = require('cors');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
