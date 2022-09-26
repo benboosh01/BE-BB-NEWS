@@ -34,11 +34,11 @@ https://bens-news.herokuapp.com/
 
     >>>> SETUP LOCAL DATABASE
 
-        npm setup-dbs
+        npm run setup-dbs
 
     >>>> SEED LOCAL DATABASE
 
-        npm seed
+        npm run seed
 
     >>>> TEST
 
