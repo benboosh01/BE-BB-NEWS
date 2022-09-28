@@ -36,10 +36,7 @@ describe('GET /api/articles/:article_id', () => {
       .then(({ body }) => {
         expect(body.article).toHaveProperty('author');
         expect(body.article).toHaveProperty('title');
-        expect(body.article).toHaveProperty(
-          'article_id',
-          1
-        );
+        expect(body.article).toHaveProperty('article_id', 1);
         expect(body.article).toHaveProperty('body');
         expect(body.article).toHaveProperty('topic');
         expect(body.article).toHaveProperty('created_at');
@@ -149,10 +146,7 @@ describe('GET /api/articles/:article_id (comment count)', () => {
       .get('/api/articles/1')
       .expect(200)
       .then(({ body }) => {
-        expect(body.article).toHaveProperty(
-          'comment_count',
-          '11'
-        );
+        expect(body.article).toHaveProperty('comment_count', '11');
       });
   });
   test('handles articles with no comments appropriately by including the column and the value 0', () => {
@@ -160,10 +154,7 @@ describe('GET /api/articles/:article_id (comment count)', () => {
       .get('/api/articles/10')
       .expect(200)
       .then(({ body }) => {
-        expect(body.article).toHaveProperty(
-          'comment_count',
-          '0'
-        );
+        expect(body.article).toHaveProperty('comment_count', '0');
       });
   });
 });
@@ -240,16 +231,6 @@ describe('GET /api/articles/:article_id/comments', () => {
             })
           );
         });
-        expect(body.comments[0]).toEqual(
-          expect.objectContaining({
-            article_id: 1,
-            comment_id: 2,
-            votes: 14,
-            created_at: expect.any(String),
-            author: 'butter_bridge',
-            body: 'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
-          })
-        );
       });
   });
   test('status 404: responds with error when article_id does not exist', () => {
@@ -348,9 +329,7 @@ describe('POST /api/articles/:article_id/comments', () => {
       .send(postComment)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe(
-          'missing comments from request'
-        );
+        expect(body.msg).toBe('missing comments from request');
       });
   });
   test('status 400: missing username from request body', () => {
@@ -362,9 +341,7 @@ describe('POST /api/articles/:article_id/comments', () => {
       .send(postComment)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe(
-          'missing username from request'
-        );
+        expect(body.msg).toBe('missing username from request');
       });
   });
 });
@@ -423,9 +400,7 @@ describe('DELETE /api/comments/:comment_id', () => {
         expect(rows.length).toBe(17);
       })
       .then(() => {
-        return db.query(
-          `SELECT * FROM comments WHERE comment_id = 1;`
-        );
+        return db.query(`SELECT * FROM comments WHERE comment_id = 1;`);
       })
       .then(({ rows }) => {
         expect(rows).toEqual([]);

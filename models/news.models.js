@@ -71,11 +71,7 @@ exports.updateArticle = (article_id, votes) => {
   });
 };
 
-exports.selectAllArticles = (
-  topic,
-  sort_by = 'created_at',
-  order = 'DESC'
-) => {
+exports.selectAllArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
   let queryStr = `
     SELECT 
     articles.author, 
@@ -141,18 +137,15 @@ exports.selectComments = (article_id) => {
       author,
       body
       FROM comments 
-      WHERE article_id = $1;
+      WHERE article_id = $1
+      ORDER BY created_at DESC;
     `;
 
   const queryVals = [article_id];
 
   return db.query(queryStr, queryVals).then(({ rows }) => {
     if (rows.length === 0) {
-      return checkExists(
-        'articles',
-        'article_id',
-        article_id
-      );
+      return checkExists('articles', 'article_id', article_id);
     } else {
       return rows;
     }
